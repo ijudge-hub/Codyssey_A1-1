@@ -134,6 +134,33 @@ def add_prompt():
     print(f"현재 총 {len(prompts)}개의 프롬프트가 있습니다.")
 # 사용자에게 프로그램의 메뉴를 보여주는 함수입니다.
 # 함수는 특정 기능을 하나로 묶어 필요할 때 다시 사용할 수 있게 합니다.
+# 현재 저장된 모든 프롬프트를 목록으로 출력하는 함수입니다.
+def show_list():
+    print("\n=== 프롬프트 목록 ===")
+
+    # 리스트가 비어 있으면 False로 판단됩니다.
+    # 저장된 프롬프트가 하나도 없을 때 안내하고 함수를 종료합니다.
+    if not prompts:
+        print("등록된 프롬프트가 없습니다.")
+        return
+
+    # enumerate()를 사용하여 프롬프트 번호와 데이터를 함께 가져옵니다.
+    # start=1을 사용하여 사용자가 보는 번호는 1부터 시작합니다.
+    for number, prompt in enumerate(prompts, start=1):
+        # favorite 값이 True이면 별표를 표시하고,
+        # False이면 빈 문자열을 사용하여 아무것도 표시하지 않습니다.
+        favorite_mark = "⭐" if prompt["favorite"] else ""
+
+        # 딕셔너리에서 카테고리와 제목을 꺼내 목록 한 줄을 출력합니다.
+        print(
+            f"{number}. "
+            f"[{prompt['category']}] "
+            f"{prompt['title']} "
+            f"{favorite_mark}"
+        )
+
+    # len()으로 전체 프롬프트 개수를 계산하여 출력합니다.
+    print(f"총 {len(prompts)}개의 프롬프트가 있습니다.")
 def show_menu():
     # print() 함수로 프로그램 이름과 각 메뉴 항목을 출력합니다.
     print("\n=== 나만의 프롬프트 관리 ===")
@@ -175,8 +202,12 @@ def main():
         elif choice == "1":
             add_prompt()
 
-        # 2번부터 7번까지는 이후 단계에서 구현합니다.
-        elif choice in ["2", "3", "4", "5", "6", "7"]:
+           # 사용자가 2번을 선택하면 전체 프롬프트 목록을 출력합니다.
+        elif choice == "2":
+            show_list()
+
+        # 3번부터 7번까지는 이후 단계에서 구현합니다.
+        elif choice in ["3", "4", "5", "6", "7"]:
             print("해당 기능은 아직 준비 중입니다.")
 
         # 0부터 7까지가 아닌 값을 입력하면 잘못된 입력으로 처리합니다.
