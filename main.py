@@ -245,7 +245,52 @@ def search_prompt():
     # 검색 결과의 개수를 출력합니다.
     print(f"총 {len(search_results)}개의 프롬프트를 찾았습니다.")
 
+# 사용자가 선택한 프롬프트의 전체 내용을 보여주는 함수입니다.
+def show_detail():
+    print("\n=== 프롬프트 상세 보기 ===")
 
+    # 프롬프트가 하나도 없으면 선택할 수 없으므로 안내하고 종료합니다.
+    if not prompts:
+        print("등록된 프롬프트가 없습니다.")
+        return
+
+    # 사용자가 번호를 확인할 수 있도록 전체 목록을 먼저 보여줍니다.
+    show_list()
+
+    # 상세하게 확인할 프롬프트 번호를 입력받습니다.
+    choice = input("상세 보기 번호 입력: ").strip()
+
+    # isdigit()으로 입력값이 숫자인지 확인합니다.
+    if not choice.isdigit():
+        print("프롬프트 번호는 숫자로 입력해주세요.")
+        return
+
+    # 입력받은 문자열을 정수로 변환합니다.
+    prompt_number = int(choice)
+
+    # 입력한 번호가 실제 프롬프트 범위에 포함되는지 확인합니다.
+    if not 1 <= prompt_number <= len(prompts):
+        print(f"1부터 {len(prompts)}까지의 번호를 입력해주세요.")
+        return
+
+    # 리스트의 순서는 0부터 시작하므로 입력 번호에서 1을 뺍니다.
+    selected_prompt = prompts[prompt_number - 1]
+
+    # 즐겨찾기 상태를 사용자가 이해하기 쉬운 문구로 바꿉니다.
+    if selected_prompt["favorite"]:
+        favorite_text = "등록됨 ⭐"
+    else:
+        favorite_text = "등록되지 않음"
+
+    # 선택한 프롬프트의 전체 정보를 출력합니다.
+    print("\n" + "─" * 40)
+    print(f"제목: {selected_prompt['title']}")
+    print(f"카테고리: {selected_prompt['category']}")
+    print(f"즐겨찾기: {favorite_text}")
+    print("─" * 40)
+    print("내용:")
+    print(selected_prompt["content"])
+    print("─" * 40)
 # 사용자에게 프로그램 메뉴를 보여주는 함수입니다.
 def show_menu():
     # print() 함수로 프로그램 이름과 각 메뉴 항목을 출력합니다.
@@ -299,8 +344,12 @@ def main():
         elif choice == "4":
             search_prompt()
 
-        # 5번부터 7번까지는 이후 단계에서 구현합니다.
-        elif choice in ["5", "6", "7"]:
+                # 사용자가 5번을 선택하면 프롬프트 상세 보기를 실행합니다.
+        elif choice == "5":
+            show_detail()
+
+        # 6번과 7번은 이후 단계에서 구현합니다.
+        elif choice in ["6", "7"]:
             print("해당 기능은 아직 준비 중입니다.")
 
         # 0부터 7까지가 아닌 값을 입력하면 잘못된 입력으로 처리합니다.
