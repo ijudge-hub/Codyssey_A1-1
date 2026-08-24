@@ -161,6 +161,40 @@ def show_list():
 
     # len()으로 전체 프롬프트 개수를 계산하여 출력합니다.
     print(f"총 {len(prompts)}개의 프롬프트가 있습니다.")
+    # 사용자가 선택한 카테고리에 해당하는 프롬프트만 출력하는 함수입니다.
+def show_by_category():
+    print("\n=== 카테고리별 조회 ===")
+
+    # 기존의 카테고리 선택 함수를 실행하여 사용자의 선택을 받습니다.
+    selected_category = select_category()
+
+    # 선택한 카테고리에 해당하는 프롬프트를 저장할 빈 리스트입니다.
+    matched_prompts = []
+
+    # 전체 프롬프트를 하나씩 확인합니다.
+    for prompt in prompts:
+        # 현재 프롬프트의 카테고리가 사용자가 선택한 카테고리와
+        # 같은지 비교합니다.
+        if prompt["category"] == selected_category:
+            # 카테고리가 같으면 결과 리스트에 추가합니다.
+            matched_prompts.append(prompt)
+
+    # 해당 카테고리의 프롬프트가 하나도 없는 경우입니다.
+    if not matched_prompts:
+        print(f"'{selected_category}' 카테고리의 프롬프트가 없습니다.")
+        return
+
+    print(f"\n[{selected_category}] 카테고리 프롬프트:")
+
+    # 검색된 프롬프트를 번호와 함께 출력합니다.
+    for number, prompt in enumerate(matched_prompts, start=1):
+        # favorite 값에 따라 즐겨찾기 별표를 표시합니다.
+        favorite_mark = "⭐" if prompt["favorite"] else ""
+
+        print(f"{number}. {prompt['title']} {favorite_mark}")
+
+    # 선택한 카테고리에 포함된 프롬프트 개수를 출력합니다.
+    print(f"총 {len(matched_prompts)}개의 프롬프트가 있습니다.")
 def show_menu():
     # print() 함수로 프로그램 이름과 각 메뉴 항목을 출력합니다.
     print("\n=== 나만의 프롬프트 관리 ===")
@@ -205,9 +239,12 @@ def main():
            # 사용자가 2번을 선택하면 전체 프롬프트 목록을 출력합니다.
         elif choice == "2":
             show_list()
+        # 사용자가 3번을 선택하면 카테고리별 조회를 실행합니다.
+        elif choice == "3":
+            show_by_category()
 
-        # 3번부터 7번까지는 이후 단계에서 구현합니다.
-        elif choice in ["3", "4", "5", "6", "7"]:
+        # 4번부터 7번까지는 이후 단계에서 구현합니다.
+        elif choice in ["4", "5", "6", "7"]:
             print("해당 기능은 아직 준비 중입니다.")
 
         # 0부터 7까지가 아닌 값을 입력하면 잘못된 입력으로 처리합니다.
