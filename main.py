@@ -53,7 +53,85 @@ prompts = [
     },
 ]
 
+# 사용자에게 값을 입력받고, 빈 값인지 확인하는 함수입니다.
+# message에는 "제목: "처럼 사용자에게 보여줄 안내 문구가 들어옵니다.
+def get_non_empty_input(message):
+    # 올바른 값이 입력될 때까지 계속 반복합니다.
+    while True:
+        # input()으로 값을 입력받습니다.
+        # strip()은 입력값 앞뒤의 불필요한 공백을 제거합니다.
+        value = input(message).strip()
 
+        # value에 글자가 하나라도 있으면 정상적인 입력입니다.
+        if value:
+            # 정상 입력값을 함수를 호출한 곳으로 돌려줍니다.
+            return value
+
+        # 아무것도 입력하지 않았거나 공백만 입력한 경우 안내합니다.
+        print("입력값을 비워둘 수 없습니다. 다시 입력해주세요.")
+
+
+# 사용자에게 카테고리 목록을 보여주고 선택받는 함수입니다.
+def select_category():
+    print("\n=== 카테고리 선택 ===")
+
+    # enumerate()는 리스트의 순서와 값을 함께 가져옵니다.
+    # start=1을 사용하여 화면 번호가 1부터 시작하게 합니다.
+    for number, category in enumerate(categories, start=1):
+        print(f"{number}. {category}")
+
+    # 기본 목록에 없는 카테고리를 직접 입력할 수 있는 메뉴입니다.
+    direct_input_number = len(categories) + 1
+    print(f"{direct_input_number}. 직접 입력")
+
+    # 정상적인 카테고리를 선택할 때까지 반복합니다.
+    while True:
+        choice = input("카테고리 번호 선택: ").strip()
+
+        # isdigit()은 입력값이 숫자로만 구성되어 있는지 확인합니다.
+        if choice.isdigit():
+            # input()의 결과는 문자열이므로 int()로 정수로 바꿉니다.
+            category_number = int(choice)
+
+            # 1부터 기본 카테고리 개수까지 선택한 경우입니다.
+            if 1 <= category_number <= len(categories):
+                # 리스트 번호는 0부터 시작하므로 1을 빼서 접근합니다.
+                return categories[category_number - 1]
+
+            # 마지막 번호를 선택하면 카테고리를 직접 입력받습니다.
+            if category_number == direct_input_number:
+                return get_non_empty_input("새 카테고리 이름: ")
+
+        # 숫자가 아니거나 메뉴 범위를 벗어난 경우 안내합니다.
+        print("잘못된 선택입니다. 화면에 표시된 번호를 입력해주세요.")
+
+
+# 새로운 프롬프트를 등록하는 함수입니다.
+def add_prompt():
+    print("\n=== 프롬프트 추가 ===")
+
+    # 제목과 내용은 빈 값이 허용되지 않으므로 검증 함수를 사용합니다.
+    title = get_non_empty_input("제목: ")
+    content = get_non_empty_input("내용: ")
+
+    # 카테고리는 카테고리 선택 함수를 통해 입력받습니다.
+    category = select_category()
+
+    # 새 프롬프트 한 개를 딕셔너리로 만듭니다.
+    new_prompt = {
+        "title": title,
+        "content": content,
+        "category": category,
+
+        # 새로 추가한 프롬프트는 즐겨찾기가 아닌 상태로 시작합니다.
+        "favorite": False,
+    }
+
+    # append()는 리스트의 마지막에 새로운 데이터를 추가합니다.
+    prompts.append(new_prompt)
+
+    print(f"\n'{title}' 프롬프트가 추가되었습니다.")
+    print(f"현재 총 {len(prompts)}개의 프롬프트가 있습니다.")
 # 사용자에게 프로그램의 메뉴를 보여주는 함수입니다.
 # 함수는 특정 기능을 하나로 묶어 필요할 때 다시 사용할 수 있게 합니다.
 def show_menu():
@@ -93,8 +171,12 @@ def main():
             # break는 현재 실행 중인 while 반복문을 종료합니다.
             break
 
-        # 1부터 7까지는 앞으로 구현할 정상적인 메뉴 번호입니다.
-        elif choice in ["1", "2", "3", "4", "5", "6", "7"]:
+               # 사용자가 1번을 선택하면 프롬프트 추가 함수를 실행합니다.
+        elif choice == "1":
+            add_prompt()
+
+        # 2번부터 7번까지는 이후 단계에서 구현합니다.
+        elif choice in ["2", "3", "4", "5", "6", "7"]:
             print("해당 기능은 아직 준비 중입니다.")
 
         # 0부터 7까지가 아닌 값을 입력하면 잘못된 입력으로 처리합니다.
