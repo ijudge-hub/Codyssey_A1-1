@@ -195,6 +195,58 @@ def show_by_category():
 
     # 선택한 카테고리에 포함된 프롬프트 개수를 출력합니다.
     print(f"총 {len(matched_prompts)}개의 프롬프트가 있습니다.")
+
+
+# 제목 또는 내용에 검색어가 포함된 프롬프트를 찾는 함수입니다.
+def search_prompt():
+    print("\n=== 프롬프트 검색 ===")
+
+    # 검색어를 입력받고 빈 값인지 검사합니다.
+    keyword = get_non_empty_input("검색어: ")
+
+    # 영어 검색 시 대소문자를 구분하지 않도록 소문자로 바꿉니다.
+    lowered_keyword = keyword.lower()
+
+    # 검색 결과를 저장할 빈 리스트입니다.
+    search_results = []
+
+    # 모든 프롬프트를 하나씩 확인합니다.
+    for prompt in prompts:
+        # 제목과 내용을 소문자로 바꿉니다.
+        lowered_title = prompt["title"].lower()
+        lowered_content = prompt["content"].lower()
+
+        # 검색어가 제목 또는 내용에 포함되면 결과에 추가합니다.
+        if (
+            lowered_keyword in lowered_title
+            or lowered_keyword in lowered_content
+        ):
+            search_results.append(prompt)
+
+    # 검색 결과가 없으면 안내하고 함수를 종료합니다.
+    if not search_results:
+        print(f"'{keyword}'에 대한 검색 결과가 없습니다.")
+        return
+
+    print("\n검색 결과:")
+
+    # 검색 결과를 번호와 함께 출력합니다.
+    for number, prompt in enumerate(search_results, start=1):
+        # 즐겨찾기 상태에 따라 별표를 표시합니다.
+        favorite_mark = "⭐" if prompt["favorite"] else ""
+
+        print(
+            f"{number}. "
+            f"[{prompt['category']}] "
+            f"{prompt['title']} "
+            f"{favorite_mark}"
+        )
+
+    # 검색 결과의 개수를 출력합니다.
+    print(f"총 {len(search_results)}개의 프롬프트를 찾았습니다.")
+
+
+# 사용자에게 프로그램 메뉴를 보여주는 함수입니다.
 def show_menu():
     # print() 함수로 프로그램 이름과 각 메뉴 항목을 출력합니다.
     print("\n=== 나만의 프롬프트 관리 ===")
@@ -243,8 +295,12 @@ def main():
         elif choice == "3":
             show_by_category()
 
-        # 4번부터 7번까지는 이후 단계에서 구현합니다.
-        elif choice in ["4", "5", "6", "7"]:
+               # 사용자가 4번을 선택하면 프롬프트 검색을 실행합니다.
+        elif choice == "4":
+            search_prompt()
+
+        # 5번부터 7번까지는 이후 단계에서 구현합니다.
+        elif choice in ["5", "6", "7"]:
             print("해당 기능은 아직 준비 중입니다.")
 
         # 0부터 7까지가 아닌 값을 입력하면 잘못된 입력으로 처리합니다.
