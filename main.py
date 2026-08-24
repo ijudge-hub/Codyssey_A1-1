@@ -291,9 +291,56 @@ def show_detail():
     print("내용:")
     print(selected_prompt["content"])
     print("─" * 40)
-# 사용자에게 프로그램 메뉴를 보여주는 함수입니다.
-def show_menu():
+
+    # 선택한 프롬프트의 즐겨찾기 상태를 추가하거나 해제하는 함수입니다.
+def toggle_favorite():
+    print("\n=== 즐겨찾기 관리 ===")
+
+    # 프롬프트가 하나도 없으면 선택할 수 없으므로 안내하고 종료합니다.
+    if not prompts:
+        print("등록된 프롬프트가 없습니다.")
+        return
+
+    # 사용자가 번호를 확인할 수 있도록 전체 목록을 먼저 보여줍니다.
+    show_list()
+
+    # 즐겨찾기 상태를 변경할 프롬프트 번호를 입력받습니다.
+    choice = input("프롬프트 번호 입력: ").strip()
+
+    # 입력값이 숫자인지 확인합니다.
+    if not choice.isdigit():
+        print("프롬프트 번호는 숫자로 입력해주세요.")
+        return
+
+    # 문자열로 입력된 번호를 정수로 변환합니다.
+    prompt_number = int(choice)
+
+    # 번호가 실제 프롬프트 범위 안에 있는지 확인합니다.
+    if not 1 <= prompt_number <= len(prompts):
+        print(f"1부터 {len(prompts)}까지의 번호를 입력해주세요.")
+        return
+
+    # 리스트는 0부터 시작하므로 입력한 번호에서 1을 뺍니다.
+    selected_prompt = prompts[prompt_number - 1]
+
+    # not 연산자를 사용하여 현재 즐겨찾기 상태를 반대로 바꿉니다.
+    # False는 True로, True는 False로 변경됩니다.
+    selected_prompt["favorite"] = not selected_prompt["favorite"]
+
+    # 변경된 즐겨찾기 상태에 따라 다른 안내 문구를 출력합니다.
+    if selected_prompt["favorite"]:
+        print(
+            f"'{selected_prompt['title']}' 프롬프트를 "
+            "즐겨찾기에 추가했습니다."
+        )
+    else:
+        print(
+            f"'{selected_prompt['title']}' 프롬프트의 "
+            "즐겨찾기를 해제했습니다."
+        )
     # print() 함수로 프로그램 이름과 각 메뉴 항목을 출력합니다.
+    # 사용자에게 프로그램의 메뉴를 보여주는 함수입니다.
+def show_menu():
     print("\n=== 나만의 프롬프트 관리 ===")
     print("1. 프롬프트 추가")
     print("2. 프롬프트 목록")
@@ -348,8 +395,12 @@ def main():
         elif choice == "5":
             show_detail()
 
-        # 6번과 7번은 이후 단계에서 구현합니다.
-        elif choice in ["6", "7"]:
+        # 사용자가 6번을 선택하면 즐겨찾기 상태를 변경합니다.
+        elif choice == "6":
+            toggle_favorite()
+
+        # 7번은 다음 단계에서 구현합니다.
+        elif choice == "7":
             print("해당 기능은 아직 준비 중입니다.")
 
         # 0부터 7까지가 아닌 값을 입력하면 잘못된 입력으로 처리합니다.
