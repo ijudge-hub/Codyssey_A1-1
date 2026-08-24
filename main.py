@@ -340,6 +340,37 @@ def toggle_favorite():
         )
     # print() 함수로 프로그램 이름과 각 메뉴 항목을 출력합니다.
     # 사용자에게 프로그램의 메뉴를 보여주는 함수입니다.
+# 즐겨찾기로 등록된 프롬프트만 모아서 보여주는 함수입니다.
+def show_favorites():
+    print("\n=== 즐겨찾기 목록 ===")
+
+    # 즐겨찾기로 등록된 프롬프트를 저장할 빈 리스트입니다.
+    favorite_prompts = []
+
+    # 전체 프롬프트를 하나씩 확인합니다.
+    for prompt in prompts:
+        # favorite 값이 True인 프롬프트만 결과 리스트에 추가합니다.
+        if prompt["favorite"]:
+            favorite_prompts.append(prompt)
+
+    # 즐겨찾기된 프롬프트가 하나도 없으면 안내하고 종료합니다.
+    if not favorite_prompts:
+        print("즐겨찾기된 프롬프트가 없습니다.")
+        return
+
+    # 즐겨찾기된 프롬프트를 번호와 함께 출력합니다.
+    for number, prompt in enumerate(favorite_prompts, start=1):
+        print(
+            f"{number}. "
+            f"[{prompt['category']}] "
+            f"{prompt['title']} ⭐"
+        )
+
+    # 즐겨찾기로 등록된 프롬프트의 개수를 출력합니다.
+    print(f"총 {len(favorite_prompts)}개의 즐겨찾기가 있습니다.")
+
+
+# 사용자에게 프로그램의 메뉴를 보여주는 함수입니다.
 def show_menu():
     print("\n=== 나만의 프롬프트 관리 ===")
     print("1. 프롬프트 추가")
@@ -399,9 +430,9 @@ def main():
         elif choice == "6":
             toggle_favorite()
 
-        # 7번은 다음 단계에서 구현합니다.
+        # 사용자가 7번을 선택하면 즐겨찾기 목록을 출력합니다.
         elif choice == "7":
-            print("해당 기능은 아직 준비 중입니다.")
+            show_favorites()
 
         # 0부터 7까지가 아닌 값을 입력하면 잘못된 입력으로 처리합니다.
         else:
